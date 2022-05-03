@@ -4,15 +4,19 @@
 
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from "react-router-dom"
-import HomePage from "../pages/HomePage"
+import { Fragment } from 'react/cjs/react.production.min';
+//import HomePage from "../pages/HomePage"
+import Canvas from '../pages/Game';
+import { Global } from "@emotion/react";
+import reset from "../styles/reset"
 
 document.addEventListener('DOMContentLoaded', () => {
   document.body.appendChild(document.createElement('div'));
   const root = createRoot(document.querySelector('div'));
   root.render(
-    <BrowserRouter>
-      <HomePage/>
-    </BrowserRouter>
+    <Fragment>
+      <Global styles={reset}/>
+      <Canvas/>
+    </Fragment>
   )
 }, { once: true });
