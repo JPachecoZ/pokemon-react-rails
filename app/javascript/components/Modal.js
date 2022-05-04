@@ -83,6 +83,7 @@ export default function Modal(props){
   function handleCaptureClick(e){
     e.preventDefault();
     props.handleAddToCart(pokemon);
+    props.show.handleShow(false);
   }
 
   return (
