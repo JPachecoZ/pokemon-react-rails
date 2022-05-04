@@ -1,16 +1,17 @@
-//import React from "react"
+import React from "react"
 import { useState, useEffect } from "react"
 import styled from "@emotion/styled";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
 `
 
-export default function HomePage(){
+export default function HomePage({handlePokemons}){
 
   const[locations, setLocations] = useState([]);
   const[areas, setAreas] = useState([]);
-  const[pokemons, setPokemons] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("https://pokeapi.co/api/v2/region/kanto/")
@@ -24,7 +25,6 @@ export default function HomePage(){
       .then(response => response.json())
       .then(data => {
         setAreas(data.areas);
-        setPokemons("");
       });
   };
 
@@ -32,7 +32,11 @@ export default function HomePage(){
     e.preventDefault();
     fetch(area.url)
       .then(response => response.json())
-      .then(data => setPokemons(data.pokemon_encounters));
+      .then(data => {
+        console.log(data.pokemon_encounters.filter(pokemon => pokemon.version_details.find(element => element.version.name === "yellow")))
+        handlePokemons(data.pokemon_encounters.filter(pokemon => pokemon.version_details.find(element => element.version.name === "yellow") !== undefined));
+        navigate('/map');
+      })
   };
 
   return(
@@ -45,11 +49,6 @@ export default function HomePage(){
       <ul>
         {areas ? areas.map(area => {
           return <li style={{cursor: "pointer"}} key={area.name} onClick={e =>handleClickPoke(e, area)}>{area.name}</li>
-        }): ""}
-      </ul>
-      <ul>
-        {pokemons ? pokemons.map(pokemon => {
-          return <li style={{cursor: "pointer"}} key={pokemon.pokemon.name}>{pokemon.pokemon.name}</li>
         }): ""}
       </ul>
     </Container>
