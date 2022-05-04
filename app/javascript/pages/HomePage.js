@@ -33,7 +33,6 @@ export default function HomePage({handlePokemons}){
     fetch(area.url)
       .then(response => response.json())
       .then(data => {
-        console.log(data.pokemon_encounters.filter(pokemon => pokemon.version_details.find(element => element.version.name === "yellow")))
         handlePokemons(data.pokemon_encounters.filter(pokemon => pokemon.version_details.find(element => element.version.name === "yellow") !== undefined));
         navigate('/map');
       })

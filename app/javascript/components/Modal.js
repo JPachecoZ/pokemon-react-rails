@@ -1,13 +1,33 @@
 import React from "react";
 import styled from "@emotion/styled";
+import { useState, useEffect } from "react";
 
 export default function Modal(props){
+  console.log(props);
+   
+  const [pokemon, setPokemon] = useState({})
 
-  const pokemon = {
-    name: "diglett",
-    level: 15,
-    picture: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/50.png",
-  }
+  useEffect(() => {
+    fetch(props.pokemon.pokemon.url)
+      .then(response => response.json())
+      .then(data => { 
+        const pokemonData = {
+          name: data.name,
+          stats: {
+            hp: data.stats[0].base_stat,
+            attack: data.stats[1].base_stat,
+            defense: data.stats[2].base_stat,
+            special_attack: data.stats[3].base_stat,
+            special_defense: data.stats[4].base_stat,
+            speed: data.stats[5].base_stat,
+          },
+          type: types[0].type.name,
+          picture_url: data.sprites.other.dream_world.front_default
+        }
+        setPokemon(pokemonData);
+      });
+  }, []);
+
   const Container = styled.div`
     position: absolute;
     top: 0;
@@ -62,15 +82,21 @@ export default function Modal(props){
   
   function handleCaptureClick(e){
     e.preventDefault();
-    alert("captured");
+    props.handleAddToCart(pokemon);
   }
 
   return (
     <Container>
       <Card>
-        <Title>Wild {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)} appeared!</Title>
-        <Picture src={pokemon.picture}/>
-        <Text>Level {pokemon.level}</Text>
+        <Title>Wild {pokemon.name} appeared!</Title>
+        <Picture src={pokemon.picture_url}/>
+        <Text> HP: {pokemon.stats.hp} </Text>
+        <Text> Attack: {pokemon.stats.attack} </Text>
+        <Text> Defense: {pokemon.stats.defense} </Text>
+        <Text> Special Attack: {pokemon.stats.special_attack} </Text>
+        <Text> Special Defense: {pokemon.stats.special_defense} </Text>
+        <Text> Speed: {pokemon.stats.speed} </Text>
+        <Text> Type: {pokemon.stats.type} </Text>
         <Footer>
           <Button onClick={e => handleCaptureClick(e)}>Capture</Button>
           <Button onClick={e => handleLeaveClick(e)}>Leave</Button>
