@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   root.render(
     <Fragment>
       <Global styles={reset}/>
-      <Modal/>
+      <App/>
     </Fragment>
   )
 }, { once: true });

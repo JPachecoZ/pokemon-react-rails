@@ -6,7 +6,7 @@ export default function Modal(props){
   const pokemon = {
     name: "diglett",
     level: 15,
-    picture: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/50.png"
+    picture: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/50.png",
   }
   const Container = styled.div`
     position: absolute;
@@ -18,6 +18,7 @@ export default function Modal(props){
     display:flex;
     justify-content: center;
     align-items: center;
+    ${props.show.show ? "" : "display: none;"}
   `
 
   const Card = styled.div`
@@ -56,7 +57,7 @@ export default function Modal(props){
 
   function handleLeaveClick(e){
     e.preventDefault();
-    alert("closed!");
+    props.show.handleShow(false);
   }
   
   function handleCaptureClick(e){

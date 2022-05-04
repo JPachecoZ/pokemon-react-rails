@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Fragment } from "react/cjs/react.production.min";
+import Modal from "../components/Modal";
 
 function getRandomOptionFromArray(Array){
   const rndInt = Math.floor(Math.random() * Array.length);
@@ -9,8 +10,13 @@ function getRandomOptionFromArray(Array){
 export default function Map(props) {
 
   const [show, setShow] = useState(false);
+  const [pokemonData, setPokemonData] = useState({pokemon: "", encounter: ""});
 
   const canvasRef = useRef(null)
+
+  function handleShow(value){
+    setShow(value);
+  }
 
   class Player {
     constructor(){
@@ -56,9 +62,10 @@ export default function Map(props) {
     animate()
 
     addEventListener('keydown', ({keyCode}) => {
-
+      if (show === false){
       const chosenPokemon = getRandomOptionFromArray(props.pokemons);
-
+      setPokemonData({pokemon: chosenPokemon});
+      
       const encounterDetails = chosenPokemon.version_details
           .find(element => element.version.name === "yellow")
           .encounter_details.filter(element => element.method.name ==="super-rod" || 
@@ -67,13 +74,14 @@ export default function Map(props) {
           );
       
       const chosenEncounter = getRandomOptionFromArray(encounterDetails);
-
+      setPokemonData({encounter: chosenEncounter});
+      
       switch(keyCode){
         case 37:
           player.velocity.x = -5
           player.velocity.y = 0
           if (Math.random() <= chosenEncounter.chance/100) {
-            alert(`Wild ${chosenPokemon.pokemon.name}`)
+            setShow(true);
             player.velocity.x = 0
           };
           break;
@@ -81,7 +89,7 @@ export default function Map(props) {
           player.velocity.y = 5
           player.velocity.x = 0
           if (Math.random() <= chosenEncounter.chance/100) {
-            alert(`Wild ${chosenPokemon.pokemon.name}`)
+            setShow(true);
             player.velocity.y = 0
           };
           break;
@@ -89,7 +97,7 @@ export default function Map(props) {
           player.velocity.x = 5
           player.velocity.y = 0
           if (Math.random() <= chosenEncounter.chance/100) {
-            alert(`Wild ${chosenPokemon.pokemon.name}`)
+            setShow(true);
             player.velocity.x = 0
           };
           break;
@@ -97,12 +105,12 @@ export default function Map(props) {
           player.velocity.y = -5
           player.velocity.x = 0
           if (Math.random() <= chosenEncounter.chance/100) {
-            alert(`Wild ${chosenPokemon.pokemon.name}`)
+            setShow(true);
             player.velocity.y = 0
           };
           break;
       }
-    })
+    }})
 
     addEventListener('keyup', ({keyCode}) => {
       switch(keyCode){
@@ -125,7 +133,7 @@ export default function Map(props) {
 
   return (
   <Fragment>
-    <Modal show={show} pokemon={chosenPokemon} level={}/>
+    <Modal show={{show, handleShow}} pokemon={pokemonData.pokemon} level={pokemonData.encounter}/>
     <canvas ref={canvasRef} {...props}/>
   </Fragment>
   )
